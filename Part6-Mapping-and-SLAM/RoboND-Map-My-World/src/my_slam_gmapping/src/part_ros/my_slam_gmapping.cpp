@@ -56,7 +56,7 @@ void MySlamGMapping::init()
     if(!private_nh_.getParam("scan_topic", scan_topic_))
         scan_topic_ = "scan";
     if(!private_nh_.getParam("laser_frame", laser_frame_))
-        laser_frame_ = "laser_link";
+        laser_frame_ = "laser";
     
     //new一个激光雷达运动畸变的对象
     lmc_ = new LidarMotionCalibrator(laser_frame_,odom_frame_);
