@@ -67,7 +67,7 @@ public:
     inline operator OrientedPoint() const {return pose;}
     //设置粒子权重
     inline void setWeight(double w) {weight = w;}
-    //记录粒子当前地图
+    //记录粒子当前地图, 粒子的地图只拿来做定位,不做地图发布信息;
     ScanMatcherMap map;
     //记录粒子当前时刻激光雷达位姿
     OrientedPoint pose;
@@ -75,7 +75,7 @@ public:
     double weight;
     //该粒子的累计权重
     double weightSum;
-    //该粒子的节点，指向父节点
+    //该粒子的节点，指向父节点， 记录粒子的轨迹
     TNode* node; 
   };
 
@@ -205,7 +205,7 @@ inline void GridSlamProcessor::scanMatch(const double* plainReading)
     //爬山算法，score最优位姿的最大的匹配得分
     score=m_matcher.optimize(corrected, m_particles[i].map, m_particles[i].pose, plainReading);
 
-    //更新该粒子计算出的激光雷达最优位姿（地图坐标系）
+    //更新该粒子计算出的激光雷达最优位姿
     if (score > m_minimumScore)
     {
       m_particles[i].pose = corrected;
@@ -301,7 +301,7 @@ inline bool GridSlamProcessor::resample(const double* plainReading, int adaptSiz
       TNode* node=0;
       TNode* oldNode=oldGeneration[m_indexes[i]];
 
-      //创建一个新的节点 改节点的父节点为oldNode
+      //创建一个新的节点 该节点的父节点为oldNode
       node=new TNode(p.pose, oldNode);
       node->reading=reading;
 

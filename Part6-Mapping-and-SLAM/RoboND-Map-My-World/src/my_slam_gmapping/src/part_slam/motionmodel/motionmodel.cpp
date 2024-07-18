@@ -30,13 +30,12 @@ double sampleGaussian(double sigma, unsigned int S)
 
 /*
 @desc 里程计运动模型
-@p    表示粒子估计的最优位置(激光雷达上一个时刻的最优位置)
+@p    表示粒子估计的最优位置(激光雷达上一个时刻的最优位置) in 地图坐标系
 @pnew 表示里程计算出来的新的位置
 @pold 表示里程计算出来的旧的位置(即上一个里程计的位置)
 */
 
 //运动模型推算地图坐标系下的激光雷达位姿，并不神秘，就是在三个变化量加上高斯噪声，在与之前激光雷达位姿结合就算出来了，就是简单的加法运算
-
 OrientedPoint MotionModel::drawFromMotion(const OrientedPoint& p, const OrientedPoint& pnew, const OrientedPoint& pold) const
 {
 	double sxy=0.3*srr;

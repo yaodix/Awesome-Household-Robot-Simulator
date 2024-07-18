@@ -35,7 +35,9 @@ add_executable(my_slam_gmapping src/part_ros/main.cpp
                                 src/part_slam/scanmatcher/scanmatcher.cpp
                                 )
 
+add_executable(func_test src/test/func_test.cpp)
 
+target_link_libraries(func_test ${catkin_LIBRARIES})
 target_link_libraries(my_slam_gmapping ${catkin_LIBRARIES})
 
 

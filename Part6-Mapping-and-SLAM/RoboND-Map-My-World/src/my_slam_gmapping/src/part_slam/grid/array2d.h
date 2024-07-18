@@ -87,7 +87,7 @@ Array2D<Cell,debug>::~Array2D()
   for (int i=0; i<m_xsize; i++)
   {
     delete [] m_cells[i];
-    m_cells[i]=0;
+    m_cells[i]=0;  // 指针置为0
   }
   delete [] m_cells;
   m_cells=0;//指向为空

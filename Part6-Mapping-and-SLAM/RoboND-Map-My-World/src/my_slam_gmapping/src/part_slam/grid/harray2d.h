@@ -62,7 +62,7 @@ class HierarchicalArray2D: public Array2D<std::shared_ptr< Array2D<Cell> > >
 		inline int getPatchMagnitude() const {return m_patchMagnitude;}
 		const PointSet& getActiveArea() const {return m_activeArea; }		
 	protected:
-		//为一个地图补丁中的小栅格申请内存
+		//为一个地图补丁中的栅格申请内存
 		virtual Array2D<Cell> * createPatch() const;
 
 		PointSet m_activeArea;  //存储地图中使用到的Cell的坐标
@@ -126,11 +126,11 @@ IntPoint HierarchicalArray2D<Cell>::patchIndexes(int x, int y) const
 	return IntPoint(-1, -1);
 }
 
-//为一个地图补丁中的小栅格申请内存
+//为一个地图补丁中的栅格申请内存
 template <class Cell>
 Array2D<Cell>* HierarchicalArray2D<Cell>::createPatch() const
 {
-	return new Array2D<Cell>(1<<m_patchMagnitude, 1<<m_patchMagnitude);
+	return new Array2D<Cell>(1<<m_patchMagnitude, 1<<m_patchMagnitude);  
 }
 
 //输入小栅格的栅格坐标做入口参数，判断该所属地图补丁是否已分配内存
@@ -154,7 +154,7 @@ Cell& HierarchicalArray2D<Cell>::cell(int x, int y)
 		this->m_cells[c.x][c.y] = std::shared_ptr< Array2D<Cell> >(patch);//该地图补丁指向了此时的patch指针，不再为空了
 	}
 	std::shared_ptr< Array2D<Cell> >& ptr=this->m_cells[c.x][c.y];
-	return (*ptr).cell(IntPoint(x-(c.x<<m_patchMagnitude),y-(c.y<<m_patchMagnitude)));
+	return (*ptr).cell(IntPoint(x-(c.x<<m_patchMagnitude),y-(c.y<<m_patchMagnitude)));  //
 }
 
 template <class Cell>
@@ -191,11 +191,11 @@ void HierarchicalArray2D<Cell>::setActiveArea(const typename HierarchicalArray2D
 	for (PointSet::const_iterator it= aa.begin(); it!=aa.end(); ++it) 
 	{
 		IntPoint p;
-		if (patchCoords)//是否是patch的坐标
+		if (patchCoords)  // 是否是patch的坐标
 			p=*it;
 		else
 			p=patchIndexes(*it);
-		m_activeArea.insert(p);//将一个个地图补丁大栅格坐标插入m_activeArea中，元素唯一，自动排序
+		m_activeArea.insert(p);  // 将一个个地图补丁大栅格坐标插入m_activeArea中，元素唯一，自动排序
 	}
 }
 
@@ -220,7 +220,7 @@ void HierarchicalArray2D<Cell>::allocActiveArea()
 		{	
 			patch= new Array2D<Cell>(*ptr);
 		}
-		this->m_cells[it->x][it->y]=std::shared_ptr< Array2D<Cell> >(patch);//每一个地铺补丁大栅格都指向了一个分配了的地图补丁，存储每一个小栅格
+		this->m_cells[it->x][it->y]=std::shared_ptr< Array2D<Cell> >(patch);//每一个地铺补丁大栅格都指向了一个分配了的地图补丁，存储每一个个小栅格
 	}
 }
 

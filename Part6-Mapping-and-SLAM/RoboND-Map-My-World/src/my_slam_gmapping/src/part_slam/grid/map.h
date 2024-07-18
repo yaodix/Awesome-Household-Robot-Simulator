@@ -87,28 +87,28 @@ class Map
 		inline Cell& cell(const Point& p);	
 		inline const Cell& cell(const Point& p) const;
 
-        inline Cell& cell(int x, int y){ return cell(IntPoint(x, y)); }
-        inline const Cell& cell(int x, int y) const{ return cell(IntPoint(x, y)); }
-        inline Cell& cell(double x, double y){ return cell(Point(x, y)); }
-        inline const Cell& cell(double x, double y) const{ return cell(Point(x, y)); }
+		inline Cell& cell(int x, int y){ return cell(IntPoint(x, y)); }
+		inline const Cell& cell(int x, int y) const{ return cell(IntPoint(x, y)); }
+		inline Cell& cell(double x, double y){ return cell(Point(x, y)); }
+		inline const Cell& cell(double x, double y) const{ return cell(Point(x, y)); }
 
-        //判断某一个物理位置或者栅格坐标是否在地图里面 引用的是模板类m_storage(实际上是HierarchicalArray2D)中的函数
-        inline bool isInside(int x, int y)       const { return m_storage.cellState(IntPoint(x,y))&Inside; }
-        inline bool isInside(const IntPoint& p)  const { return m_storage.cellState(p)&Inside; }
-        inline bool isInside(double x, double y) const { return m_storage.cellState(world2map(x,y))&Inside; }
-        inline bool isInside(const Point& p)     const { return m_storage.cellState(world2map(p))&Inside; }
+		//判断某一个物理位置或者栅格坐标是否在地图里面 引用的是模板类m_storage(实际上是HierarchicalArray2D)中的函数
+		inline bool isInside(int x, int y)       const { return m_storage.cellState(IntPoint(x,y))&Inside; }
+		inline bool isInside(const IntPoint& p)  const { return m_storage.cellState(p)&Inside; }
+		inline bool isInside(double x, double y) const { return m_storage.cellState(world2map(x,y))&Inside; }
+		inline bool isInside(const Point& p)     const { return m_storage.cellState(world2map(p))&Inside; }
 		
 		//返回m_storage
 		inline Storage& storage() { return m_storage; }
 		inline const Storage& storage() const { return m_storage; }
 
 	protected:
-		Point   m_center;								//地图的中心
-		double  m_worldSizeX, m_worldSizeY, m_delta;	//世界坐标系的大小，以及地图的分辨率
-		Storage m_storage;								//地图数据存储的地方
-		int m_mapSizeX, m_mapSizeY;						//地图的大小
-        int m_sizeX2, m_sizeY2;                         //表示地图大小的一半
-		static const Cell m_unknown;                    //一个cell的默认值-1
+		Point   m_center;								    //地图的中心, 物理世界的原点
+		double  m_worldSizeX, m_worldSizeY, m_delta;	//世界坐标系的大小-物理世界尺寸，以及地图的分辨率
+		Storage m_storage;								 //地图数据存储的地方
+		int m_mapSizeX, m_mapSizeY;				 //栅格地图的大小,
+		int m_sizeX2, m_sizeY2;            //表示地图大小的一半， m_mapSizeX/2, m_mapSizeY/2
+		static const Cell m_unknown;       //一个cell的默认值-1
 };
 
 //此处初始化m_unknown，调用Cell的构造函数

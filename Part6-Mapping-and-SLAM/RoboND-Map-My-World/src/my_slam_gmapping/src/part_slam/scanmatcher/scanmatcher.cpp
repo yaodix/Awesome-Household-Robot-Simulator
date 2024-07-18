@@ -21,7 +21,7 @@ ScanMatcher::ScanMatcher()
 {
 	m_laserBeams=0;
 	//爬山算法减少搜索步长的次数
-    m_optRecursiveIterations=9;
+	m_optRecursiveIterations=9;
     //地图进行拓展的大小
 	m_enlargeStep=10.;
 	//判断栅格是否被占据的概率阈值
@@ -31,12 +31,12 @@ ScanMatcher::ScanMatcher()
     //如果可靠的话，那么进行score计算的时候，就需要对离里程计数据比较远的位姿增加惩罚
     //对于我们的应用来说 陀螺仪在短期内还是很可靠的。
 	m_angularOdometryReliability=0.3;
-    m_linearOdometryReliability=0.3;
+	m_linearOdometryReliability=0.3;
 
 	//用来表示和击中栅格前面的栅格
-    m_freeCellRatio=sqrt(2.);//1.414
+	m_freeCellRatio=sqrt(2.);//1.414
 
-    m_linePoints = new IntPoint[20000];
+	m_linePoints = new IntPoint[20000];
 }
 
 //析构函数
@@ -57,7 +57,7 @@ void ScanMatcher::setLaserParameters(unsigned int beams, double* angles)
 //设置match的参数
 void ScanMatcher::setMatchingParameters(double urange, double range, double sigma, int kernsize, double lopt, double aopt, int iterations,  double likelihoodSigma, unsigned int likelihoodSkip)
 {
-	m_usableRange=urange;						//传感器的使用范围
+	m_usableRange=urange;						  //传感器的使用范围
 	m_laserMaxRange=range;						//传感器的最大范围
 	m_kernelSize=kernsize;						//kernsize主要用在计算score时搜索框的大小
 	m_optLinearDelta=lopt;						//优化时的线性步长
@@ -144,8 +144,8 @@ double ScanMatcher::optimize(OrientedPoint& pnew, const ScanMatcherMap& map, con
             if (m_angularOdometryReliability>0.)
             {
                 double dth=init.theta-localPose.theta; 	
-				dth=atan2(sin(dth), cos(dth)); 	
-				dth*=dth;
+								dth=atan2(sin(dth), cos(dth)); 	
+								dth*=dth;
                 odo_gain*=exp(-m_angularOdometryReliability*dth);
             }
             //同样差距越大，odo_gain越小
@@ -251,7 +251,7 @@ void ScanMatcher::computeMap(ScanMatcherMap& map, const OrientedPoint& p, const 
 		/*如果需要生成地图*/
 		if (m_generateMap)
 		{
-            //排除错误的激光点
+			//排除错误的激光点
 			double d=*r;
 			if (d>m_laserMaxRange||d==0.0||isnan(d)) continue;
 			if (d>m_usableRange) d=m_usableRange;

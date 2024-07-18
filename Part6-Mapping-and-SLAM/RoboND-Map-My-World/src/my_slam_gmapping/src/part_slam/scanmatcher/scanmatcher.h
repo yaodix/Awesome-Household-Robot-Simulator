@@ -77,7 +77,7 @@ inline double ScanMatcher::score(const ScanMatcherMap& map, const OrientedPoint&
         phit.x+=*r*cos(lp.theta+*angle);
         phit.y+=*r*sin(lp.theta+*angle);
         //击中点在栅格地图中的栅格坐标iphit
-        IntPoint iphit=map.world2map(phit);
+        IntPoint iphit=map.world2map(phit);  // 物理坐标转到栅格map坐标
 
         //假设phit是被激光击中的点，这样的话沿着激光方向的前面一个点必定是空闲的
         Point pfree=lp;

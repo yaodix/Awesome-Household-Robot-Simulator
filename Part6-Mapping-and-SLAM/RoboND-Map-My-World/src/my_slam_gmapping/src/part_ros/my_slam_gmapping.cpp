@@ -198,7 +198,7 @@ void MySlamGMapping::laserCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
     if(addScan(*scan, odom_pose))
     {
         ROS_DEBUG("addScan finish");
-        //最优粒子，地图坐标系下的激光雷达位姿
+        //最优粒子，地图坐标系下的激光雷达位姿（是准确的小车地图坐标）
         GMapping::OrientedPoint mpose = gsp_->getParticles()[gsp_->getBestParticleIndex()].pose;
 
         //在激光雷达当前位姿下，用当前的里程计坐标系下的激光雷达位姿和map坐标系下的激光雷达位姿，来表述里程计坐标系和map坐标系的差距
@@ -210,7 +210,7 @@ void MySlamGMapping::laserCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
         //多个线程访问同一资源时，为了保证数据的一致性，最简单的方式就是使用 mutex（互斥锁）
         //阻止了同一时刻有多个线程并发访问共享资源
         map_to_odom_mutex_.lock();
-        map_to_odom_ = map_to_lidar * (odom_to_lidar.inverse()); //表述里程计坐标系和map坐标系的差距 
+        map_to_odom_ = map_to_lidar * (odom_to_lidar.inverse()); //表述里程计坐标系和map坐标系的差距（因为小车存在运动误差）
         map_to_odom_mutex_.unlock();
 
         //多久更新一次地图
@@ -231,7 +231,8 @@ void MySlamGMapping::laserCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
 bool MySlamGMapping::initMapper(const sensor_msgs::LaserScan& scan)
 {
     //通过真实的激光雷达数据，设置gmapping算法中激光的最大距离和最大使用距离，这样是为什么前面不一起初始化的原因
-    ros::NodeHandle private_nh_("~");
+    ros::NodeHandle private_nh_("~");  // 私有节点句柄用来读取参数
+    ROS_INFO(("initMapper " + private_nh_.getNamespace()).c_str());  // 获取私有节点的名称
     if(!private_nh_.getParam("maxRange", maxRange_))
         maxRange_ = scan.range_max - 0.01;
     if(!private_nh_.getParam("maxUrange", maxUrange_))
@@ -336,7 +337,7 @@ void MySlamGMapping::updateMap(const sensor_msgs::LaserScan& scan)
         map_.map.info.origin.orientation.w = 1.0;
     }
 
-    /*地图的中点*/
+    /*地图的中心点*/
     GMapping::Point center;
     center.x=(xmin_ + xmax_) / 2.0;
     center.y=(ymin_ + ymax_) / 2.0;
